@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+void sig_handler(int signo) {
+ if (signo == SIGUSR1)
+ printf("Received SIGUSR1\n");
+}
+int main(void) {
+ // Register the handler for SIGUSR1
+ if (signal(SIGUSR1, sig_handler) == SIG_ERR)
+ printf("\nCan't catch SIGUSR1\n");
+ // Attempting to catch SIGKILL or SIGSTOP will fail and print an error
+message
+ if (signal(SIGKILL, sig_handler) == SIG_ERR)
+ printf("\nCan't catch SIGKILL\n");
+ if (signal(SIGSTOP, sig_handler) == SIG_ERR)
+ printf("\nCan't catch SIGSTOP\n");
+ // Loop to keep the program running, allowing time to send signals
+ while (1)
+ sleep(1);
+ return 0;
+}

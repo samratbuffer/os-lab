@@ -1,0 +1,14 @@
+#!/bin/bash
+echo "Enter three numbers:"
+read a
+read b
+read c
+
+if (( a >= b && a >= c )); then
+  echo "Largest number: $a"
+elif (( b >= a && b >= c )); then
+  echo "Largest number: $b"
+else
+  echo "Largest number: $c"
+fi
+

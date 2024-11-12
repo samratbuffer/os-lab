@@ -1,0 +1,78 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct Process {
+    int id, bt, at, wt, tat;
+};
+
+bool compareArrival(Process a, Process b) {
+    return a.at < b.at;
+}
+
+bool compareID(Process a, Process b) {
+    return a.id < b.id;
+}
+
+void calculateWaitTime(Process ps[], int n) {
+    ps[0].wt = 0;
+    for (int i = 1; i < n; i++) {
+        ps[i].wt = ps[i - 1].wt + ps[i - 1].bt;
+        if (ps[i].wt < ps[i].at) {
+            ps[i].wt = ps[i].at - ps[i - 1].at;
+        } else {
+            ps[i].wt -= ps[i].at;
+        }
+    }
+}
+
+void calculateTurnAroundTime(Process ps[], int n) {
+    for (int i = 0; i < n; i++) {
+        ps[i].tat = ps[i].bt + ps[i].wt;
+    }
+}
+
+void display(Process ps[], int n) {
+    cout << "PROCESS ID \tAT\tBT\tWT\tTAT\n";
+    int total_tat = 0, total_wt = 0;
+    for (int i = 0; i < n; i++) {
+        cout << ps[i].id << "\t\t" << ps[i].at << "\t" << ps[i].bt << "\t"
+             << ps[i].wt << "\t" << ps[i].tat << endl;
+        total_tat += ps[i].tat;
+        total_wt += ps[i].wt;
+    }
+    cout << "AVG TAT = " << (float)total_tat / n << endl;
+    cout << "AVG WT = " << (float)total_wt / n << endl;
+}
+
+int main() {
+    int n;
+    cout << "Enter the number of processes: ";
+    cin >> n;
+    Process ps[n];
+
+    for (int i = 0; i < n; i++) {
+        ps[i].id = i + 1;
+        cout << "Process " << ps[i].id << endl;
+        cout << "Arrival Time (AT): ";
+        cin >> ps[i].at;
+        cout << "Burst Time (BT): ";
+        cin >> ps[i].bt;
+    }
+
+    // Sort processes based on arrival time
+    sort(ps, ps + n, compareArrival);
+
+    // Calculate wait time and turn around time
+    calculateWaitTime(ps, n);
+    calculateTurnAroundTime(ps, n);
+
+    // Sort processes by ID to display in original order
+    sort(ps, ps + n, compareID);
+
+    // Display the result
+    display(ps, n);
+
+    return 0;
+}
+

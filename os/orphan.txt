@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
+int main() {
+ pid_t pid = fork();
+if (pid > 0) {
+ // Parent process
+ printf("Parent process (PID: %d) is terminating.\n", getpid());
+ exit(0); // Parent terminates immediately
+ }
+ else if (pid == 0) {
+ // Child process
+ sleep(10); // Ensure the parent exits first
+ printf("Child process (PID: %d) became an orphan and was adopted
+by init (PPID: %d).\n", getpid(), getppid());
+ }
+ else {
+ perror("Fork failed");
+ }
+return 0;
+}
+

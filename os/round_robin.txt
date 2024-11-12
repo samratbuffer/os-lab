@@ -1,0 +1,76 @@
+#include <iostream>
+using namespace std;
+
+struct Process {
+    int id, bt, rt, wt, tat;
+};
+
+void RoundRobin(Process ps[], int n, int q) {
+    int time = 0;
+    bool done;
+
+    while (true) {
+        done = true;
+        for (int i = 0; i < n; i++) {
+            // Process is still remaining
+            if (ps[i].rt > 0) {
+                done = false;
+                // Process executes for the time quantum or remaining time, whichever is smaller
+                if (ps[i].rt > q) {
+                    time += q;
+                    ps[i].rt -= q;
+                } else {
+                    time += ps[i].rt;
+                    ps[i].wt = time - ps[i].bt;
+                    ps[i].rt = 0;
+                }
+            }
+        }
+        // If all processes are done
+        if (done) break;
+    }
+
+    // Calculate turnaround time for each process
+    for (int i = 0; i < n; i++) {
+        ps[i].tat = ps[i].bt + ps[i].wt;
+    }
+}
+
+void display(Process ps[], int n) {
+    cout << "PROCESS ID\tBT\tWT\tTAT\n";
+    int total_tat = 0, total_wt = 0;
+
+    for (int i = 0; i < n; i++) {
+        cout << ps[i].id << "\t\t" << ps[i].bt << "\t" << ps[i].wt << "\t" << ps[i].tat << endl;
+        total_tat += ps[i].tat;
+        total_wt += ps[i].wt;
+    }
+
+    cout << "Average TAT = " << (float)total_tat / n << endl;
+    cout << "Average WT = " << (float)total_wt / n << endl;
+}
+
+int main() {
+    int n;
+    cout << "Enter number of processes: ";
+    cin >> n;
+
+    Process ps[n];
+    int q;
+    cout << "Enter Quantum Time: ";
+    cin >> q;
+
+    for (int i = 0; i < n; i++) {
+        cout << "Process " << i + 1 << ":" << endl;
+        ps[i].id = i + 1;
+        cout << "BT = ";
+        cin >> ps[i].bt;
+        ps[i].rt = ps[i].bt;
+    }
+
+    RoundRobin(ps, n, q);
+    display(ps, n);
+
+    return 0;
+}
+

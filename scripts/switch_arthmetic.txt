@@ -1,0 +1,20 @@
+#!/bin/bash
+echo "Enter two numbers:"
+read a
+read b
+
+echo "Choose operation: 1) Add 2) Subtract 3) Multiply 4) Divide"
+read op
+
+case $op in
+  1) result=$((a + b)); echo "Result: $result";;
+  2) result=$((a - b)); echo "Result: $result";;
+  3) result=$((a * b)); echo "Result: $result";;
+  4) if [ $b -ne 0 ]; then
+       result=$((a / b)); echo "Result: $result"
+     else
+       echo "Cannot divide by zero"
+     fi;;
+  *) echo "Invalid option";;
+esac
+

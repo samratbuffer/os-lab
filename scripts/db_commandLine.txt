@@ -1,0 +1,22 @@
+#!/bin/bash
+# Print all command-line arguments
+echo "Command line arguments:"
+for arg in "$@"; do
+  echo "$arg"
+done
+
+# Simple database simulation
+declare -A database
+database["Alice"]="1234"
+database["Bob"]="5678"
+database["Carol"]="9012"
+
+echo "Enter name to get account number:"
+read name
+
+if [ -n "${database[$name]}" ]; then
+  echo "Account number of $name: ${database[$name]}"
+else
+  echo "No record found for $name"
+fi
+

@@ -1,0 +1,80 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+struct Process {
+    int id, bt, pt, wt, tat;
+};
+
+// Comparison function to sort by priority (assuming lower number has higher priority)
+bool compare_pt(Process a, Process b) {
+    return a.pt < b.pt;
+}
+
+// Comparison function to sort by process ID
+bool compare_id(Process a, Process b) {
+    return a.id < b.id;
+}
+
+// Function to calculate waiting time for each process
+void calculate_waiting_time(Process ps[], int n) {
+    ps[0].wt = 0; // Waiting time for first process is 0
+    for (int i = 1; i < n; i++) {
+        ps[i].wt = ps[i - 1].wt + ps[i - 1].bt;
+    }
+}
+
+// Function to calculate turnaround time for each process
+void calculate_turnaround_time(Process ps[], int n) {
+    for (int i = 0; i < n; i++) {
+        ps[i].tat = ps[i].bt + ps[i].wt;
+    }
+}
+
+// Function to display process information and calculate average times
+void display(Process ps[], int n) {
+    cout << "PROCESS ID\tPT\tBT\tWT\tTAT\n";
+    int total_tat = 0, total_wt = 0;
+
+    for (int i = 0; i < n; i++) {
+        cout << ps[i].id << "\t\t" << ps[i].pt << "\t" << ps[i].bt << "\t" << ps[i].wt << "\t" << ps[i].tat << endl;
+        total_tat += ps[i].tat;
+        total_wt += ps[i].wt;
+    }
+
+    cout << "Average TAT = " << (float)total_tat / n << endl;
+    cout << "Average WT = " << (float)total_wt / n << endl;
+}
+
+int main() {
+    int n;
+    cout << "Enter number of processes: ";
+    cin >> n;
+
+    Process ps[n];
+
+    for (int i = 0; i < n; i++) {
+        cout << "Process " << i + 1 << ":" << endl;
+        ps[i].id = i + 1;
+        cout << "Priority (PT) = ";
+        cin >> ps[i].pt;
+        cout << "Burst Time (BT) = ";
+        cin >> ps[i].bt;
+    }
+
+    // Sort processes by priority (lower number = higher priority)
+    sort(ps, ps + n, compare_pt);
+
+    // Calculate waiting and turnaround times
+    calculate_waiting_time(ps, n);
+    calculate_turnaround_time(ps, n);
+
+    // Sort by process ID to display in order of input
+    sort(ps, ps + n, compare_id);
+
+    // Display process information and averages
+    display(ps, n);
+
+    return 0;
+}
+
