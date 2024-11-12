@@ -1,14 +1,47 @@
 #!/bin/bash
-for i in {1..3}; do
-  echo "Enter bank account information for person $i:"
-  read -p "Account Number: " acc_number
-  read -p "Account Holder Name: " name
-  read -p "Account Balance: " balance
 
-  echo "Account Info for Person $i:"
-  echo "Account Number: $acc_number"
-  echo "Account Holder Name: $name"
-  echo "Account Balance: $balance"
-  echo "-------------------------------"
+# Function to input bank account details
+input_details() {
+    echo "Enter details for Person $1:"
+    read -p "Name: " name
+    read -p "Account Number: " account_number
+    read -p "Balance: " balance
+    persons[$1]="Name: $name, Account Number: $account_number, Balance: $balance"
+}
+
+# Declare an associative array to store information of each person
+declare -A persons
+
+# Main menu using switch case
+while true; do
+    echo "Bank Account Information System"
+    echo "1. Input details for Person 1"
+    echo "2. Input details for Person 2"
+    echo "3. Input details for Person 3"
+    echo "4. Display details of all persons"
+    echo "5. Exit"
+    read -p "Choose an option (1-5): " choice
+
+    case $choice in
+        1) input_details 1 ;;
+        2) input_details 2 ;;
+        3) input_details 3 ;;
+        4)
+            echo "Displaying all bank account information:"
+            for i in 1 2 3; do
+                if [ -n "${persons[$i]}" ]; then
+                    echo "Person $i: ${persons[$i]}"
+                else
+                    echo "Person $i: No information available."
+                fi
+            done
+            ;;
+        5)
+            echo "Exiting."
+            break
+            ;;
+        *)
+            echo "Invalid option. Please choose again."
+            ;;
+    esac
 done
-
